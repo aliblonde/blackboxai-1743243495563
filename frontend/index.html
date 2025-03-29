@@ -1,0 +1,205 @@
+<!DOCTYPE html>
+<html lang="en" x-data="app">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Money Transfer App</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/alpinejs@3.12.0/dist/cdn.min.js" defer></script>
+    <script src="/js/app.js" defer></script>
+</head>
+<body class="bg-gray-100 font-sans">
+    <!-- Login Modal -->
+    <div x-show="showLoginModal" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50">
+        <div class="bg-white rounded-lg shadow-xl w-full max-w-md">
+            <div class="p-6">
+                <h2 class="text-2xl font-bold text-gray-800 mb-6">Welcome Back</h2>
+                
+                <form @submit.prevent="login" class="space-y-4">
+                    <div>
+                        <label class="block text-gray-700 mb-2">Phone Number</label>
+                        <input type="tel" placeholder="+964XXXXXXXXXX" 
+                               class="w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
+                    </div>
+                    
+                    <div>
+                        <label class="block text-gray-700 mb-2">PIN</label>
+                        <input type="password" placeholder="••••••" 
+                               class="w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
+                    </div>
+                    
+                    <button type="submit" 
+                            class="w-full bg-blue-600 text-white py-2 px-4 rounded-lg hover:bg-blue-700 transition duration-200">
+                        Log In
+                    </button>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- Main App Layout -->
+    <div x-show="!showLoginModal" class="min-h-screen flex flex-col">
+        <!-- Header -->
+        <header class="bg-white shadow-sm">
+            <div class="max-w-7xl mx-auto px-4 py-4 sm:px-6 lg:px-8 flex justify-between items-center">
+                <h1 class="text-xl font-bold text-gray-900">Money Transfer App</h1>
+                <div class="flex items-center space-x-4">
+                    <span class="text-gray-600">Welcome, User</span>
+                    <button class="p-2 rounded-full hover:bg-gray-100">
+                        <i class="fas fa-bell text-gray-500"></i>
+                    </button>
+                </div>
+            </div>
+        </header>
+
+        <!-- Main Content -->
+        <main class="flex-grow">
+            <div class="max-w-7xl mx-auto px-4 py-6 sm:px-6 lg:px-8">
+                <!-- Account Balances -->
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-8">
+                    <!-- IQD Account Card -->
+                    <div class="bg-white rounded-lg shadow p-6">
+                        <div class="flex justify-between items-start">
+                            <div>
+                                <h3 class="text-lg font-medium text-gray-500">IQD Account</h3>
+                                <p class="text-3xl font-bold mt-2">25,000 <span class="text-lg">IQD</span></p>
+                            </div>
+                            <span class="text-green-500 font-medium">+2.5%</span>
+                        </div>
+                        <div class="mt-6 flex space-x-2">
+                            <button @click="showSendModal = true" 
+                                    class="flex-1 bg-blue-600 text-white py-2 px-4 rounded hover:bg-blue-700">
+                                Send Money
+                            </button>
+                            <button class="flex-1 bg-gray-200 text-gray-800 py-2 px-4 rounded hover:bg-gray-300">
+                                Deposit
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- USD Account Card -->
+                    <div class="bg-white rounded-lg shadow p-6">
+                        <div class="flex justify-between items-start">
+                            <div>
+                                <h3 class="text-lg font-medium text-gray-500">USD Account</h3>
+                                <p class="text-3xl font-bold mt-2">500 <span class="text-lg">USD</span></p>
+                            </div>
+                            <span class="text-green-500 font-medium">+1.2%</span>
+                        </div>
+                        <div class="mt-6 flex space-x-2">
+                            <button @click="showSendModal = true" 
+                                    class="flex-1 bg-blue-600 text-white py-2 px-4 rounded hover:bg-blue-700">
+                                Send Money
+                            </button>
+                            <button class="flex-1 bg-gray-200 text-gray-800 py-2 px-4 rounded hover:bg-gray-300">
+                                Deposit
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Exchange Rate Card -->
+                    <div class="bg-white rounded-lg shadow p-6">
+                        <h3 class="text-lg font-medium text-gray-500">Exchange Rates</h3>
+                        <div class="mt-4 space-y-3">
+                            <div class="flex justify-between">
+                                <span>1 USD</span>
+                                <span class="font-medium">1,450 IQD</span>
+                            </div>
+                            <div class="flex justify-between">
+                                <span>1 IQD</span>
+                                <span class="font-medium">0.00069 USD</span>
+                            </div>
+                        </div>
+                        <button class="mt-6 w-full bg-gray-200 text-gray-800 py-2 px-4 rounded hover:bg-gray-300">
+                            Exchange Currency
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Recent Transactions -->
+                <div class="bg-white rounded-lg shadow overflow-hidden">
+                    <div class="px-6 py-4 border-b border-gray-200">
+                        <h3 class="text-lg font-medium text-gray-900">Recent Transactions</h3>
+                    </div>
+                    <div class="divide-y divide-gray-200">
+                        <!-- Transaction Item -->
+                        <div class="px-6 py-4 flex justify-between items-center">
+                            <div>
+                                <p class="font-medium">Sent to +9647712345678</p>
+                                <p class="text-sm text-gray-500">Today, 10:30 AM</p>
+                            </div>
+                            <div class="text-right">
+                                <p class="font-medium text-red-600">-10,000 IQD</p>
+                                <p class="text-sm text-gray-500">Pending</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <!-- Send Money Modal -->
+    <div x-show="showSendModal" 
+         x-transition
+         class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50">
+        <div class="bg-white rounded-lg shadow-xl w-full max-w-md">
+            <div class="p-6">
+                <div class="flex justify-between items-center mb-4">
+                    <h2 class="text-xl font-bold text-gray-800">Send Money</h2>
+                    <button @click="showSendModal = false" class="text-gray-500 hover:text-gray-700">
+                        <i class="fas fa-times"></i>
+                    </button>
+                </div>
+                
+                <form @submit.prevent="sendMoney" class="space-y-4">
+                    <div>
+                        <label class="block text-gray-700 mb-2">Recipient Phone Number</label>
+                        <input x-model="sendData.recipientPhone" 
+                               type="tel" 
+                               placeholder="+964XXXXXXXXXX" 
+                               class="w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                               required>
+                    </div>
+                    
+                    <div>
+                        <label class="block text-gray-700 mb-2">Amount</label>
+                        <div class="relative">
+                            <input x-model="sendData.amount" 
+                                   type="number" 
+                                   placeholder="0.00" 
+                                   class="w-full pl-12 pr-4 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                                   min="0.01"
+                                   step="0.01"
+                                   required>
+                            <span class="absolute left-3 top-2.5 text-gray-500" x-text="sendData.currency"></span>
+                        </div>
+                    </div>
+                    
+                    <div>
+                        <label class="block text-gray-700 mb-2">Currency</label>
+                        <select x-model="sendData.currency" 
+                                class="w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
+                            <option value="IQD">IQD</option>
+                            <option value="USD">USD</option>
+                        </select>
+                    </div>
+                    
+                    <div>
+                        <label class="block text-gray-700 mb-2">Note (Optional)</label>
+                        <textarea x-model="sendData.note" 
+                                  class="w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                                  rows="2"></textarea>
+                    </div>
+                    
+                    <button type="submit" 
+                            class="w-full bg-blue-600 text-white py-2 px-4 rounded-lg hover:bg-blue-700 transition duration-200">
+                        Send Money
+                    </button>
+                </form>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
